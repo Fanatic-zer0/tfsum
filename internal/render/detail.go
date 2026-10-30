@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io"
 
-	"tfsum/internal/color"
-	"tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
 
 // DetailedResource renders the full attribute-level view of a single
