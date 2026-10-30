@@ -1,7 +1,6 @@
 # tfsum
 
-`tfsum` is a detailed, color-coded, risk-aware alternative to the default
-`terraform plan` review experience.
+`tfsum` is a detailed, color-coded, risk-aware alternative to the default `terraform plan` review experience.
 
 It **runs Terraform's real planner internally** — it is not a replacement for
 Terraform's planning engine, only for the command and output experience.
