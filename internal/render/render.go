@@ -11,8 +11,8 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	"tfsum/internal/color"
-	"tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
 
 // View selects which report layout to render.
