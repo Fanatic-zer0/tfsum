@@ -129,7 +129,7 @@ jobs:
           done
 
       - name: Install nfpm
-        run: go install github.com/goreleaser/nfpm/v2/cmd/nfpm@v2.40.0
+        run: go install github.com/goreleaser/nfpm/v2/cmd/nfpm@v2.48.0
 
       - name: Build .deb/.rpm packages (linux only)
         env:

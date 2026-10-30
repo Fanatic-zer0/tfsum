@@ -13,5 +13,6 @@ description: |
 contents:
   - src: ${NFPM_BINARY}
     dst: /usr/local/bin/tfsum
+    expand: true
     file_info:
       mode: 0755
