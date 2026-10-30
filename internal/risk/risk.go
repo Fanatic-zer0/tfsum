@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
 
 // RuleMatch declares the conditions under which a Rule applies to a
