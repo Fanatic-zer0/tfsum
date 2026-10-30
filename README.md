@@ -6,18 +6,30 @@ It **runs Terraform's real planner internally** — it is not a replacement for
 Terraform's planning engine, only for the command and output experience.
 Where you'd normally run:
 
-```
+```sh
 terraform plan
 ```
 
 you instead run:
 
-```
+```sh
 tfsum
 ```
 
 and get a structured, grouped, risk-annotated change report instead of
 Terraform's raw diff output.
+
+## Table of contents
+
+- [Why tfsum instead of `terraform plan`](#why-tfsum-instead-of-terraform-plan)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Output](#output)
+- [Risk rules](#risk-rules)
+- [CI usage](#ci-usage)
+- [Security and sensitive-value handling](#security-and-sensitive-value-handling)
+- [Limitations](#limitations)
+- [Development](#development)
 
 ## Why tfsum instead of `terraform plan`
 
@@ -47,10 +59,33 @@ human-readable text.
 
 ## Installation
 
-Build from source (the module uses a local path, so there's no `go install
-.../tfsum@latest` form until it's published under a real module path):
+### Homebrew (macOS and Linux)
 
+```sh
+brew tap Fanatic-zer0/tfsum
+brew install tfsum
 ```
+
+### Linux packages (.deb/.rpm)
+
+Download the `tfsum_<version>_<arch>.deb` or `.rpm` from the
+[releases page](https://github.com/Fanatic-zer0/tfsum/releases) and install
+with your distro's package manager, e.g.:
+
+```sh
+sudo dpkg -i tfsum_v0.1.0_amd64.deb      # Debian/Ubuntu
+sudo rpm -i tfsum_v0.1.0.x86_64.rpm      # Fedora/RHEL
+```
+
+### Prebuilt binaries
+
+Download a `.tar.gz`/`.zip` for your platform from the
+[releases page](https://github.com/Fanatic-zer0/tfsum/releases), verify
+against `checksums.txt`, and place the `tfsum` binary on your `PATH`.
+
+### Build from source
+
+```sh
 git clone <this-repository>
 cd tfsum
 make build      # produces bin/tfsum
@@ -62,7 +97,7 @@ Requires Go 1.22+ and a `terraform` (or OpenTofu) binary on `PATH`.
 
 ## Usage
 
-```
+```sh
 tfsum                               # like `terraform plan`, with a better report
 tfsum --detailed                    # full attribute-level diffs
 tfsum --view executive              # one-screen summary
@@ -88,7 +123,7 @@ and the internal execution flow.
 
 ### Reviewer view (default)
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │ TERRAFORM PLAN SUMMARY                                        │
 └──────────────────────────────────────────────────────────────┘
@@ -197,7 +232,7 @@ code when available), and `3` on an internal tfsum error. See
 
 ## Development
 
-```
+```sh
 make build         # build bin/tfsum
 make test          # go test ./...
 make vet           # go vet ./...
