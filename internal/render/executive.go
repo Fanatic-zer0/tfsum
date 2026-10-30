@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io"
 
-	"tfsum/internal/color"
-	"tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
 
 // Executive renders tfsum's high-level view: risk, change counts, critical
