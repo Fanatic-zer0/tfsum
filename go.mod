@@ -1,4 +1,4 @@
-module github.com/dheeryad/tfsum
+module github.com/Fanatic-zer0/tfsum
 
 go 1.27.0
 
