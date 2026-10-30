@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"tfsum/internal/color"
-	"tfsum/internal/plan"
-	"tfsum/internal/risk"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/risk"
 )
 
 func loadFixtureReport(t *testing.T) *plan.PlanReport {
