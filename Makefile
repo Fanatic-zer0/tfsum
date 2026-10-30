@@ -1,9 +1,9 @@
 BINARY     := tfsum
-MODULE     := github.com/dheeryad/tfsum
+MODULE     := github.com/Fanatic-zer0/tfsum
 VERSION    ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 LDFLAGS    := -X '$(MODULE)/internal/cli.Version=$(VERSION)'
 
-.PHONY: all build install test test-verbose cover golden vet fmt fmt-check lint clean
+.PHONY: all build install test test-verbose cover vet fmt fmt-check lint clean
 
 all: build
 
@@ -22,11 +22,6 @@ test-verbose:
 cover:
 	go test -coverprofile=coverage.out ./...
 	go tool cover -func=coverage.out
-
-# Regenerate golden fixtures in testdata/golden after an intentional
-# rendering change. Review the diff before committing.
-golden:
-	UPDATE_GOLDEN=1 go test ./internal/render/...
 
 vet:
 	go vet ./...
