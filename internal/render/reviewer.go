@@ -6,8 +6,8 @@ import (
 	"io"
 	"time"
 
-	"tfsum/internal/color"
-	"tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
 
 // ReviewerOptions controls optional Reviewer rendering behavior.
