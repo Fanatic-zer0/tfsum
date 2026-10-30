@@ -48,16 +48,15 @@ human-readable text.
 
 ## Installation
 
-```
-go install github.com/dheeryad/tfsum/cmd/tfsum@latest
-```
-
-or build from source:
+Build from source (the module uses a local path, so there's no `go install
+.../tfsum@latest` form until it's published under a real module path):
 
 ```
-git clone https://github.com/dheeryad/tfsum
+git clone <this-repository>
 cd tfsum
-make build   # produces bin/tfsum
+make build      # produces bin/tfsum
+# or
+go build -o bin/tfsum ./cmd/tfsum
 ```
 
 Requires Go 1.22+ and a `terraform` (or OpenTofu) binary on `PATH`.
@@ -204,5 +203,4 @@ make build         # build bin/tfsum
 make test          # go test ./...
 make vet           # go vet ./...
 make fmt-check     # verify gofmt cleanliness
-make golden        # regenerate testdata/golden/* after an intentional rendering change
 ```
