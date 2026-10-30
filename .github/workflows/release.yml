@@ -1,0 +1,111 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: "0"
+        run: |
+          mkdir -p dist
+          ext=""
+          if [ "${GOOS}" = "windows" ]; then ext=".exe"; fi
+          go build -trimpath -ldflags "-s -w -X 'tfsum/internal/cli.Version=${GITHUB_REF_NAME}'" \
+            -o "dist/tfsum${ext}" ./cmd/tfsum
+
+      - name: Upload raw binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfsum_${{ matrix.goos }}_${{ matrix.goarch }}
+          path: dist/*
+          retention-days: 1
+
+  package:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download raw binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: raw
+          pattern: tfsum_*
+          merge-multiple: false
+
+      - name: Archive each platform binary
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          for dir in raw/*/; do
+            name="$(basename "$dir")"           # tfsum_<goos>_<goarch>
+            platform="${name#tfsum_}"            # <goos>_<goarch>
+            archive_base="tfsum_${GITHUB_REF_NAME}_${platform}"
+            if [[ "$platform" == windows_* ]]; then
+              (cd "$dir" && zip -q "../../dist/${archive_base}.zip" tfsum.exe)
+            else
+              (cd "$dir" && chmod +x tfsum && tar -czf "../../dist/${archive_base}.tar.gz" tfsum)
+            fi
+          done
+          cd dist && sha256sum * > checksums.txt
+
+      - name: Upload packaged archives
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfsum-packaged
+          path: dist/*
+          retention-days: 1
+
+  release:
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download packaged archives
+        uses: actions/download-artifact@v4
+        with:
+          name: tfsum-packaged
+          path: dist
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
