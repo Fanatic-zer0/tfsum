@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
 
 func loadSampleReport(t *testing.T) *plan.PlanReport {
