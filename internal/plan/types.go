@@ -6,7 +6,7 @@ package plan
 import (
 	"time"
 
-	"tfsum/internal/diff"
+	"github.com/Fanatic-zer0/tfsum/internal/diff"
 )
 
 // ActionKind classifies the overall effect of a resource change.
