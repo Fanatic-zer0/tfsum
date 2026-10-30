@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
 )
 
 // Error renders a helpful, color-coded error report. title is a short
