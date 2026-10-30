@@ -8,13 +8,13 @@ import (
 	"io"
 	"strings"
 
-	"tfsum/internal/color"
-	"tfsum/internal/plan"
-	"tfsum/internal/policy"
-	"tfsum/internal/render"
-	"tfsum/internal/risk"
-	"tfsum/internal/tempdir"
-	"tfsum/internal/terraform"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/policy"
+	"github.com/Fanatic-zer0/tfsum/internal/render"
+	"github.com/Fanatic-zer0/tfsum/internal/risk"
+	"github.com/Fanatic-zer0/tfsum/internal/tempdir"
+	"github.com/Fanatic-zer0/tfsum/internal/terraform"
 )
 
 // Run parses args, executes the full plan/parse/risk/render pipeline (or
