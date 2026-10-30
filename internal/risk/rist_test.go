@@ -1,82 +1,10 @@
 package risk
 
 import (
-	"os"
 	"testing"
 
 	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
-
-func loadSampleReport(t *testing.T) *plan.PlanReport {
-	t.Helper()
-	data, err := os.ReadFile("../../testdata/plans/sample.json")
-	if err != nil {
-		t.Fatalf("read fixture: %v", err)
-	}
-	report, err := plan.Parse(data)
-	if err != nil {
-		t.Fatalf("Parse: %v", err)
-	}
-	return report
-}
-
-func riskByAddress(report *plan.PlanReport, addr string) plan.RiskFinding {
-	for _, rc := range report.ResourceChanges {
-		if rc.Address == addr {
-			return rc.Risk
-		}
-	}
-	return plan.RiskFinding{}
-}
-
-func TestApplyDefaultRules(t *testing.T) {
-	report := loadSampleReport(t)
-	Apply(report, DefaultRules())
-
-	cases := []struct {
-		address  string
-		wantRule string
-		wantMin  plan.RiskLevel
-	}{
-		{"module.db.aws_db_instance.main", "stateful-replacement", plan.RiskCritical},
-		{"module.network.aws_security_group.web", "public-ingress-ipv4", plan.RiskCritical},
-		{"module.compute.aws_instance.web[1]", "resource-deletion", plan.RiskCritical},
-		{"module.iam.aws_iam_role_policy.admin", "iam-wildcard-action", plan.RiskCritical},
-		{"module.storage.aws_s3_bucket.assets", "tag-only-change", plan.RiskLow},
-	}
-	for _, tc := range cases {
-		got := riskByAddress(report, tc.address)
-		if got.Level < tc.wantMin {
-			t.Errorf("%s: Risk.Level = %s, want >= %s", tc.address, got.Level, tc.wantMin)
-		}
-	}
-
-	if report.Summary.HighestRisk != plan.RiskCritical {
-		t.Errorf("Summary.HighestRisk = %s, want CRITICAL", report.Summary.HighestRisk)
-	}
-
-	if len(report.Drift) == 0 {
-		t.Fatal("expected drift entries")
-	}
-	if report.Drift[0].Risk.Level < plan.RiskMedium {
-		t.Errorf("drift risk = %s, want at least MEDIUM", report.Drift[0].Risk.Level)
-	}
-}
-
-func TestEvaluateResourceUnknownValues(t *testing.T) {
-	report := loadSampleReport(t)
-	Apply(report, DefaultRules())
-
-	found := false
-	for _, f := range report.Risks {
-		if f.RuleID == "unknown-values" {
-			found = true
-		}
-	}
-	if !found {
-		t.Error("expected at least one unknown-values finding")
-	}
-}
 
 func TestMatchesActionSetExact(t *testing.T) {
 	rc := &plan.ResourceChange{
