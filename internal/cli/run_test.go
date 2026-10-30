@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
 
 func reportWithKinds(kinds ...plan.ActionKind) *plan.PlanReport {
