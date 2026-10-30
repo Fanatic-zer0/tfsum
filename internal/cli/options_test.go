@@ -3,9 +3,9 @@ package cli
 import (
 	"testing"
 
-	"github.com/dheeryad/tfsum/internal/color"
-	"github.com/dheeryad/tfsum/internal/plan"
-	"github.com/dheeryad/tfsum/internal/render"
+	"tfsum/internal/color"
+	"tfsum/internal/plan"
+	"tfsum/internal/render"
 )
 
 func TestParseArgsPassthrough(t *testing.T) {
