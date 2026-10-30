@@ -9,7 +9,7 @@ import (
 
 	tfjson "github.com/hashicorp/terraform-json"
 
-	"tfsum/internal/diff"
+	"github.com/Fanatic-zer0/tfsum/internal/diff"
 )
 
 // supportedMajorFormatVersion is the plan JSON major format version tfsum
