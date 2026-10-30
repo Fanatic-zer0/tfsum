@@ -11,8 +11,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"tfsum/internal/plan"
-	"tfsum/internal/risk"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/risk"
 )
 
 // DiscoveryNames are the config file names auto-discovered in the current
