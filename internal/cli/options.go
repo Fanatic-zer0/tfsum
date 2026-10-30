@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"tfsum/internal/color"
-	"tfsum/internal/plan"
-	"tfsum/internal/render"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/render"
 )
 
 // Options holds every tfsum-specific flag, plus every other argument
