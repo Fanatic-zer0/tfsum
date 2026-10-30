@@ -4,8 +4,8 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/lipgloss/table"
 
-	"tfsum/internal/color"
-	"tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
 
 // resourceTable renders a single module's changed resources as a
