@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io"
 
-	"tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
 )
 
 type jsonSummary struct {
