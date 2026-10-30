@@ -35,7 +35,7 @@ go.work.sum
 .tfsum-*/
 tfsum.tfplan
 *.tfplan
-tfsum
+/tfsum
 /bin/
 /dist/
 *.test
