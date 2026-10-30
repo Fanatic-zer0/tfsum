@@ -31,6 +31,17 @@ Terraform's raw diff output.
 - [Limitations](#limitations)
 - [Development](#development)
 
+
+
+## Default view 
+
+<img width="1377" height="746" alt="image" src="https://github.com/user-attachments/assets/7bbea405-a64d-4742-ba9a-3959938081d9" />
+
+## Detailed view 
+
+<img width="1377" height="746" alt="image" src="https://github.com/user-attachments/assets/94199bf2-4a45-4512-9148-eaf8e5604d38" />
+
+
 ## Why tfsum instead of `terraform plan`
 
 - **Risk-aware**: every resource change is run through a deterministic rule
