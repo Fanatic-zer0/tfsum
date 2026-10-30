@@ -3,9 +3,9 @@ package cli
 import (
 	"testing"
 
-	"tfsum/internal/color"
-	"tfsum/internal/plan"
-	"tfsum/internal/render"
+	"github.com/Fanatic-zer0/tfsum/internal/color"
+	"github.com/Fanatic-zer0/tfsum/internal/plan"
+	"github.com/Fanatic-zer0/tfsum/internal/render"
 )
 
 func TestParseArgsPassthrough(t *testing.T) {
