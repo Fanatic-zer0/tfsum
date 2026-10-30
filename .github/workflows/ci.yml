@@ -127,7 +127,26 @@ jobs:
               (cd "$dir" && chmod +x tfsum && tar -czf "../../dist/${archive_base}.tar.gz" tfsum)
             fi
           done
-          cd dist && sha256sum * > checksums.txt
+
+      - name: Install nfpm
+        run: go install github.com/goreleaser/nfpm/v2/cmd/nfpm@v2.40.0
+
+      - name: Build .deb/.rpm packages (linux only)
+        env:
+          NFPM_VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          for arch in amd64 arm64; do
+            export NFPM_ARCH="${arch}"
+            export NFPM_BINARY="raw/tfsum_linux_${arch}/tfsum"
+            chmod +x "${NFPM_BINARY}"
+            for pkg in deb rpm; do
+              nfpm package --config packaging/nfpm.yaml --packager "${pkg}" --target "dist/"
+            done
+          done
+
+      - name: Checksum all release assets
+        run: cd dist && sha256sum * > checksums.txt
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
@@ -136,3 +155,64 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
+
+  homebrew-tap:
+    needs: package
+    if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref_name, '-')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download macOS/Linux release archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          gh release download "${GITHUB_REF_NAME}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --pattern 'checksums.txt' \
+            --dir assets
+
+      - name: Render Homebrew formula
+        id: render
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          version="${tag#v}"
+          darwin_amd64_sha="$(grep '_darwin_amd64.tar.gz' assets/checksums.txt | awk '{print $1}')"
+          darwin_arm64_sha="$(grep '_darwin_arm64.tar.gz' assets/checksums.txt | awk '{print $1}')"
+          linux_amd64_sha="$(grep '_linux_amd64.tar.gz' assets/checksums.txt | awk '{print $1}')"
+          linux_arm64_sha="$(grep '_linux_arm64.tar.gz' assets/checksums.txt | awk '{print $1}')"
+          mkdir -p formula
+          sed \
+            -e "s/{{VERSION}}/${version}/g" \
+            -e "s/{{TAG}}/${tag}/g" \
+            -e "s/{{DARWIN_AMD64_SHA}}/${darwin_amd64_sha}/g" \
+            -e "s/{{DARWIN_ARM64_SHA}}/${darwin_arm64_sha}/g" \
+            -e "s/{{LINUX_AMD64_SHA}}/${linux_amd64_sha}/g" \
+            -e "s/{{LINUX_ARM64_SHA}}/${linux_arm64_sha}/g" \
+            packaging/homebrew/tfsum.rb.tmpl > formula/tfsum.rb
+
+      - name: Publish formula to homebrew-tfsum tap
+        env:
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${HOMEBREW_TAP_TOKEN}" ]; then
+            echo "HOMEBREW_TAP_TOKEN secret is not set; skipping tap publish." >&2
+            exit 1
+          fi
+          git clone "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/Fanatic-zer0/homebrew-tfsum.git" tap
+          cp formula/tfsum.rb tap/Formula/tfsum.rb
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/tfsum.rb
+          if git diff --cached --quiet; then
+            echo "Formula unchanged, nothing to publish."
+            exit 0
+          fi
+          git commit -m "tfsum ${GITHUB_REF_NAME}"
+          git push origin HEAD:main

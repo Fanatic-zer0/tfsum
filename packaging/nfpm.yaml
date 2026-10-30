@@ -1,0 +1,17 @@
+name: tfsum
+arch: ${NFPM_ARCH}
+platform: linux
+version: ${NFPM_VERSION}
+section: utils
+priority: optional
+maintainer: "Dheeraj <dheerajyadav.me@gmail.com>"
+homepage: "https://github.com/Fanatic-zer0/tfsum"
+license: MIT
+description: |
+  A detailed, color-coded, risk-aware alternative to `terraform plan`.
+
+contents:
+  - src: ${NFPM_BINARY}
+    dst: /usr/local/bin/tfsum
+    file_info:
+      mode: 0755
